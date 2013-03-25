@@ -1,0 +1,12 @@
+function outputFrame = decodeFrame(baseLayerCompressed, quantizedResidual1, quantizedResidual2)
+
+baseLayerCompressedFile = 'base.wtc';
+baseLayerCompressedFileId = fopen(baseLayerCompressedFile, 'w');
+fwrite(baseLayerCompressedFileId, baseLayerCompressed);
+fclose(baseLayerCompressedFileId);
+baseLayerUncompressed = wcompress('u', baseLayerCompressedFile);
+
+
+
+
+end
