@@ -1,0 +1,4 @@
+spatialVideoScalingAsgn
+=======================
+
+using wavelets
