@@ -1,7 +1,7 @@
 function [baseLayerDecoded, enhancementLayer1Decoded, enhancementLayer2Decoded] = decodeFrame(baseLayerCompressed, quantizedResidual1, quantizedResidual2, inputVideoDimension)
 
-maxPower2Dimension = 2 ^ floor(log2(min(inputVideoDimension)));
-baseLayerDimension = maxPower2Dimension ./ 4;
+maxPower2Length = 2 ^ floor(log2(min(inputVideoDimension)));
+baseLayerDimension = [maxPower2Length maxPower2Length] ./ 4;
 enhancementLayer1Dimension = baseLayerDimension * 2;
 enhancementLayer2Dimension = baseLayerDimension * 4;
 

@@ -1,56 +1,34 @@
 clear all; close all; clc;
 
-cd ~/Desktop/scalableVideoCodingProject/
+cd ~/Desktop/spatialVideoScalingAsgn/
 
 % input parameters
-
+tic
 seq = 'stefan_cif.yuv';
 numberOfFrames = 30;
 inputVideoDimension = [352 288];
 [Y, U, V] = yuv_import(seq, inputVideoDimension, numberOfFrames, 0, 'YUV420_8');
 
 % encode parameters
-waveletName = 'db2';
-maximumLoop = 11;
-compressionTechnique = 'spiht';
-baseLayerFile = 'base.wtc';
-waveletDecompositionLevel = 3;
+waveletName = 'db1';
+decompositionLevel = 3;
 
 
 % end of input parameters
 
-previousPower2Dimension = 2 ^ floor(log2(min(inputVideoDimension)));
-baseLayerDimension = previousPower2Dimension ./ 4;
-enhancementLayer1Dimension = baseLayerDimension * 2;
-enhancementLayer2Dimension = baseLayerDimension * 4;
-
-baseLayerFrames = cell(1, numberOfFrames);
-enhancementLayer1Frames = cell(1, numberOfFrames);
-enhancementLayer2Frames = cell(1, numberOfFrames);
-
-baseLayerFramesDecoded = cell(1, numberOfFrames);
-enhancementLayer1FramesDecoded = cell(1, numberOfFrames);
-enhancementLayer2FramesDecoded = cell(1, numberOfFrames);
+baseLayerDecoded = cell(1, numberOfFrames);
+enhancementLayer1Decoded = cell(1, numberOfFrames);
+enhancementLayer2Decoded = cell(1, numberOfFrames);
 
 
-bitStreamFromTheEncoder = cell(1, 3*numberOfFrames);
+% bitStreamFromTheEncoder = cell(1, 3*numberOfFrames);
 
-% encoding loop
+% the loop
 
 for k = 1:numberOfFrames
-    baseLayerFrames{k} = imresize(Y{k}, baseLayerDimension);
-    enhancementLayer1Frames{k} = imresize(Y{k}, enhancementLayer1Dimension);
-    enhancementLayer2Frames{k} = imresize(Y{k}, enhancementLayer2Dimension);
     
-    wcompress('c', baseLayerFrames{k}, baseLayerFile, compressionTechnique, 'wname', waveletName, 'maxloop', maximumLoop);
-    
-    baseLayerFileCompressed = fopen(baseLayerFile);
-    
-    baseLayerFileUncompressed = wcompress('u', baseLayerFile);
-    baseLayerFramesDecoded{k} = baseLayerFileUncompressed;
-    
-    residual1 = enhancementLayer1Frames{k} - imresize(baseLayerFileUncompressed, enhancementLayer1Dimension);
-    
-    [
+    [baseLayerCompressed, quantizedResidual1, quantizedResidual2] = encodeFrame(Y{k}, decompositionLevel, waveletName, inputVideoDimension);
+    [baseLayerDecoded{k}, enhancementLayer1Decoded{k}, enhancementLayer2Decoded{k}] = decodeFrame(baseLayerCompressed, quantizedResidual1, quantizedResidual2, inputVideoDimension);    
 end
+toc
     

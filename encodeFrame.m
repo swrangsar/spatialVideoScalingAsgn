@@ -4,8 +4,8 @@ maximumLoop = 11;
 compressionTechnique = 'spiht';
 baseLayerCompressedFile = 'base.wtc';
 
-maxPower2Dimension = 2 ^ floor(log2(min(inputVideoDimension)));
-baseLayerDimension = maxPower2Dimension ./ 4;
+maxPower2Int = 2 ^ floor(log2(min(inputVideoDimension)));
+baseLayerDimension = [maxPower2Int maxPower2Int] ./ 4;
 enhancementLayer1Dimension = baseLayerDimension * 2;
 enhancementLayer2Dimension = baseLayerDimension * 4;
 
@@ -30,7 +30,6 @@ fclose(baseLayerCompressedFileId);
 
 
 % need to update the variables below
-dim1 = size(residual1);
 
 quantizedResidual1 = uniformQuantize(residual1);
 quantizedResidual2 = uniformQuantize(residual2);
