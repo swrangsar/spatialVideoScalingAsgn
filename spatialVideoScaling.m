@@ -30,5 +30,31 @@ for k = 1:numberOfFrames
     [baseLayerCompressed, quantizedResidual1, quantizedResidual2] = encodeFrame(Y{k}, decompositionLevel, waveletName, inputVideoDimension);
     [baseLayerDecoded{k}, enhancementLayer1Decoded{k}, enhancementLayer2Decoded{k}] = decodeFrame(baseLayerCompressed, quantizedResidual1, quantizedResidual2, inputVideoDimension);    
 end
+
+% display the received video
+
+outputMaxDimension = fliplr(inputVideoDimension);
+figure;
+for k = 1:numberOfFrames
+    imshow(mat2gray(imresize(baseLayerDecoded{k}, round(outputMaxDimension ./4))));
+    drawnow;
+end
+title(strcat('Base layer of ', seq));
+
+figure;
+for k = 1:numberOfFrames
+    imshow(mat2gray(imresize(enhancementLayer1Decoded{k}, round(outputMaxDimension ./2))));
+    drawnow;
+end
+title(strcat('Enhancement layer 1 of ', seq));
+
+figure;
+for k = 1:numberOfFrames
+    imshow(mat2gray(imresize(enhancementLayer2Decoded{k}, outputMaxDimension)));
+    drawnow;
+end
+title(strcat('Enhancement layer 2 of ', seq));
+
+
 toc
     
